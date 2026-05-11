@@ -1,0 +1,126 @@
+openapi: 3.0.3
+info:
+  title: Calendars API
+  version: 1.0.0
+  description: Example CRUD API for calendars.
+servers:
+  - url: https://api.example.com
+    description: Example server
+paths:
+  /calendars:
+    get:
+      tags:
+        - Calendars
+      summary: List calendars
+      responses:
+        '200':
+          description: Calendars found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Calendar'
+    post:
+      tags:
+        - Calendars
+      summary: Create calendar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalendarInput'
+      responses:
+        '201':
+          description: Calendar created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Calendar'
+  /calendars/{id}:
+    parameters:
+      - $ref: '#/components/parameters/CalendarId'
+    get:
+      tags:
+        - Calendars
+      summary: Get calendar by ID
+      responses:
+        '200':
+          description: Calendar found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Calendar'
+        '404':
+          description: Calendar not found
+    put:
+      tags:
+        - Calendars
+      summary: Update calendar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalendarInput'
+      responses:
+        '200':
+          description: Calendar updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Calendar'
+        '404':
+          description: Calendar not found
+    delete:
+      tags:
+        - Calendars
+      summary: Delete calendar
+      responses:
+        '204':
+          description: Calendar deleted
+        '404':
+          description: Calendar not found
+components:
+  parameters:
+    CalendarId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Calendar identifier
+  schemas:
+    Calendar:
+      allOf:
+        - $ref: '#/components/schemas/CalendarInput'
+        - type: object
+          required:
+            - id
+            - createdAt
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 4c0ee90a-75d7-4a19-a4ef-f4bdde9f0001
+            createdAt:
+              type: string
+              format: date-time
+              example: '2026-05-11T12:00:00Z'
+    CalendarInput:
+      type: object
+      required:
+        - name
+        - timezone
+      properties:
+        name:
+          type: string
+          example: Product Team Calendar
+        timezone:
+          type: string
+          example: America/Sao_Paulo
+        color:
+          type: string
+          example: '#2563eb'

@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info:
+  title: Fixture API
+  version: 1.0.0
+  description: Example API for users, calendars, and planners.
+servers:
+  - url: https://api.example.com
+    description: Example server
+tags:
+  - name: Users
+    description: User management operations
+  - name: Calendars
+    description: Calendar management operations
+  - name: Planners
+    description: Planner management operations
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+  /users:
+    $ref: './users.yaml#/paths/~1users'
+  /users/{id}:
+    $ref: './users.yaml#/paths/~1users~1{id}'
+  /calendars:
+    $ref: './calendars.yaml#/paths/~1calendars'
+  /calendars/{id}:
+    $ref: './calendars.yaml#/paths/~1calendars~1{id}'
+  /planners:
+    $ref: './planners.yaml#/paths/~1planners'
+  /planners/{id}:
+    $ref: './planners.yaml#/paths/~1planners~1{id}'
+components:
+  parameters:
+    UserId:
+      $ref: './users.yaml#/components/parameters/UserId'
+    CalendarId:
+      $ref: './calendars.yaml#/components/parameters/CalendarId'
+    PlannerId:
+      $ref: './planners.yaml#/components/parameters/PlannerId'
+  schemas:
+    User:
+      $ref: './users.yaml#/components/schemas/User'
+    UserInput:
+      $ref: './users.yaml#/components/schemas/UserInput'
+    Calendar:
+      $ref: './calendars.yaml#/components/schemas/Calendar'
+    CalendarInput:
+      $ref: './calendars.yaml#/components/schemas/CalendarInput'
+    Planner:
+      $ref: './planners.yaml#/components/schemas/Planner'
+    PlannerInput:
+      $ref: './planners.yaml#/components/schemas/PlannerInput'
