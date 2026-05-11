@@ -20,6 +20,21 @@ API de exemplo para gerenciamento de usuários.
 | `PUT` | `/users/{id}` | Atualiza um usuário por ID. |
 | `DELETE` | `/users/{id}` | Remove um usuário por ID. |
 
+## Fluxo de criação
+
+```plantuml
+@startuml
+actor Client
+participant "Users API" as API
+database Database
+
+Client -> API: POST /users
+API -> Database: Insert user
+Database --> API: Created user
+API --> Client: 201 Created
+@enduml
+```
+
 ## Exemplo de payload
 
 ```json

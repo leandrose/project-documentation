@@ -7,7 +7,7 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
-export function renderMarkdownPage({ title, body }) {
+export function renderMarkdownPage({ title, sidebar, body }) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -17,9 +17,14 @@ export function renderMarkdownPage({ title, body }) {
   <link rel="stylesheet" href="/assets/documentation.css">
 </head>
 <body>
-  <main class="markdown-page">
-    ${body}
-  </main>
+  <div class="documentation-layout">
+    <aside class="documentation-sidebar">
+      ${sidebar}
+    </aside>
+    <main class="markdown-page">
+      ${body}
+    </main>
+  </div>
 </body>
 </html>`;
 }

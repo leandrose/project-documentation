@@ -38,20 +38,35 @@ async function tryPort(app, port) {
   }
 }
 
-export async function startServer(app) {
+function logStarted(port) {
+  console.log(`Project documentation server running at http://localhost:${port}`);
+}
+
+export async function startServer(app, { port } = {}) {
+  if (port) {
+    const server = await tryPort(app, port);
+
+    if (!server) {
+      throw new Error(`Port ${port} is already in use`);
+    }
+
+    logStarted(port);
+    return { server, port };
+  }
+
   const defaultServer = await tryPort(app, DEFAULT_PORT);
 
   if (defaultServer) {
-    console.log(`Project documentation server running at http://localhost:${DEFAULT_PORT}`);
+    logStarted(DEFAULT_PORT);
     return { server: defaultServer, port: DEFAULT_PORT };
   }
 
-  for (let port = FALLBACK_START; port <= FALLBACK_END; port += 1) {
-    const server = await tryPort(app, port);
+  for (let fallbackPort = FALLBACK_START; fallbackPort <= FALLBACK_END; fallbackPort += 1) {
+    const server = await tryPort(app, fallbackPort);
 
     if (server) {
-      console.log(`Project documentation server running at http://localhost:${port}`);
-      return { server, port };
+      logStarted(fallbackPort);
+      return { server, port: fallbackPort };
     }
   }
 
