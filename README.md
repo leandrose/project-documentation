@@ -5,10 +5,12 @@ Reusable Node.js documentation server for project Markdown files and OpenAPI/Swa
 ## Install
 
 ```bash
-npm install --save-dev project-documentation
+npm install --save-dev @leandrose/project-documentation
 ```
 
 ## Usage
+
+The package is published as `@leandrose/project-documentation`, and the executable command remains `project-documentation`.
 
 Add a script to the consuming project:
 
