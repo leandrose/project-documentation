@@ -63,7 +63,7 @@ describe('server port selection', () => {
     servers.push(result.server);
 
     expect(result.port).toBe(4201);
-    expect(log).toHaveBeenCalledWith('Project documentation server running at http://localhost:4201');
+    expect(log).toHaveBeenCalledWith('Project documentation server running at http://127.0.0.1:4201');
   });
 
   it('uses the fallback range when port 4201 is occupied', async () => {
@@ -77,7 +77,7 @@ describe('server port selection', () => {
 
     expect(result.port).toBeGreaterThanOrEqual(33000);
     expect(result.port).toBeLessThanOrEqual(33999);
-    expect(log).toHaveBeenCalledWith(`Project documentation server running at http://localhost:${result.port}`);
+    expect(log).toHaveBeenCalledWith(`Project documentation server running at http://127.0.0.1:${result.port}`);
   });
 
   it('starts on a custom port when provided', async () => {
@@ -87,7 +87,17 @@ describe('server port selection', () => {
     servers.push(result.server);
 
     expect(result.port).toBe(customPort);
-    expect(log).toHaveBeenCalledWith(`Project documentation server running at http://localhost:${customPort}`);
+    expect(log).toHaveBeenCalledWith(`Project documentation server running at http://127.0.0.1:${customPort}`);
+  });
+
+  it('starts on a custom host when provided', async () => {
+    const customPort = await getAvailablePort();
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const result = await startServer(express(), { host: '127.0.0.1', port: customPort });
+    servers.push(result.server);
+
+    expect(result.port).toBe(customPort);
+    expect(log).toHaveBeenCalledWith(`Project documentation server running at http://127.0.0.1:${customPort}`);
   });
 
   it('throws when the custom port is occupied', async () => {

@@ -30,15 +30,27 @@ npm run docs
 
 The server tries port `4201` first. If it is unavailable, it tries ports from `33000` to `33999` and prints the selected URL in the console.
 
-You can also pass a custom port as the second argument:
+You can also pass a custom port with `--port`:
 
 ```json
 {
   "scripts": {
-    "docs": "project-documentation docs/ 5000"
+    "docs": "project-documentation docs/ --port 5000"
   }
 }
 ```
+
+By default, the server binds to the local host. To allow access from another interface, pass `--host`:
+
+```json
+{
+  "scripts": {
+    "docs:network": "project-documentation docs/ --port 5000 --host 0.0.0.0"
+  }
+}
+```
+
+> Security warning: using `--host 0.0.0.0` exposes the documentation server to external network access. Only use it in trusted networks and avoid serving sensitive documentation.
 
 ## Documentation layout
 
