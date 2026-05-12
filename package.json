@@ -1,6 +1,6 @@
 {
   "name": "@leandrose/project-documentation",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Dynamic project documentation server for rendering Markdown content and serving OpenAPI/Swagger specifications with integrated HTML documentation pages.",
   "keywords": [
     "project",
