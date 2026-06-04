@@ -55,7 +55,7 @@ export async function buildAsyncApiHtml(filePath) {
 
   try {
     const generator = new Generator('@asyncapi/html-template', targetPath, {
-      compile: false,
+      compile: true,
       forceWrite: true,
       templateParams: {
         singleFile: true
