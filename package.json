@@ -26,18 +26,19 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@apidevtools/swagger-parser": "^12.0.0",
-    "@asyncapi/generator": "^2.8.0",
+    "@apidevtools/swagger-parser": "^12.1.0",
+    "@asyncapi/generator": "^3.2.1",
     "@asyncapi/html-template": "^3.5.6",
-    "express": "^4.21.2",
-    "marked": "^15.0.7",
+    "express": "^5.2.1",
+    "marked": "^18.0.5",
+    "npm-check-updates": "^22.2.2",
     "plantuml-encoder": "^1.4.0",
-    "swagger-ui-dist": "^5.20.1",
-    "yaml": "^2.7.0"
+    "swagger-ui-dist": "^5.32.6",
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
-    "supertest": "^7.0.0",
-    "vitest": "^3.0.5"
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.8"
   },
   "engines": {
     "node": ">=18"

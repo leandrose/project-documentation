@@ -11,6 +11,29 @@ const docsPath = path.join(__dirname, 'fixtures/docs');
 const app = createApp({ docsPath });
 
 describe('documentation app', () => {
+  describe('documentation routes smoke tests', () => {
+    it('serves Markdown documentation', async () => {
+      const response = await request(app).get('/md/index.md').expect(200);
+
+      expect(response.headers['content-type']).toContain('text/html');
+      expect(response.text).toContain('<h1>Welcome</h1>');
+    });
+
+    it('serves OpenAPI YAML documentation', async () => {
+      const response = await request(app).get('/openapi/openapi.yaml').expect(200);
+
+      expect(response.headers['content-type']).toContain('text/yaml');
+      expect(response.text).toContain('openapi: 3.0.3');
+    });
+
+    it('serves AsyncAPI YAML documentation', async () => {
+      const response = await request(app).get('/websocket/asyncapi.yaml').expect(200);
+
+      expect(response.headers['content-type']).toContain('text/yaml');
+      expect(response.text).toContain('asyncapi: 3.0.0');
+    });
+  });
+
   it('renders Markdown documents as HTML', async () => {
     const response = await request(app).get('/md/index.md').expect(200);
 

@@ -57,6 +57,14 @@ function renderMarkdown(markdown) {
   return marked.parse(markdown, { renderer });
 }
 
+function routePathParam(value, fallback) {
+  if (Array.isArray(value)) {
+    return value.join('/');
+  }
+
+  return value || fallback;
+}
+
 async function markdownFiles(basePath, directory = '') {
   const directoryPath = path.join(basePath, directory);
   const entries = await fs.readdir(directoryPath, { withFileTypes: true });
@@ -141,9 +149,9 @@ export function createApp({ docsPath }) {
     }
   });
 
-  app.get('/md/*', async (request, response, next) => {
+  app.get('/md{/*relativePath}', async (request, response, next) => {
     try {
-      const relativePath = request.params[0] || 'index.md';
+      const relativePath = routePathParam(request.params.relativePath, 'index.md');
       const filePath = safeJoin(path.join(resolvedDocsPath, 'md'), relativePath);
 
       if (!filePath) {
@@ -168,9 +176,9 @@ export function createApp({ docsPath }) {
     }
   });
 
-  app.get('/openapi/:spec(*)', async (request, response, next) => {
+  app.get('/openapi{/*spec}', async (request, response, next) => {
     try {
-      const requestedSpec = request.params.spec || 'openapi';
+      const requestedSpec = routePathParam(request.params.spec, 'openapi');
       const filePath = await findOpenApiFile(resolvedDocsPath, requestedSpec);
 
       if (!filePath) {
@@ -200,9 +208,9 @@ export function createApp({ docsPath }) {
     }
   });
 
-  app.get('/websocket/:spec(*)', async (request, response, next) => {
+  app.get('/websocket{/*spec}', async (request, response, next) => {
     try {
-      const requestedSpec = request.params.spec || 'asyncapi';
+      const requestedSpec = routePathParam(request.params.spec, 'asyncapi');
       const filePath = await findAsyncApiFile(resolvedDocsPath, requestedSpec);
 
       if (!filePath) {
