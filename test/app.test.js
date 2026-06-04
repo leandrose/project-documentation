@@ -4,7 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
-import { createApp, findOpenApiFile } from '../src/index.js';
+import { createApp, findAsyncApiFile, findOpenApiFile } from '../src/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const docsPath = path.join(__dirname, 'fixtures/docs');
@@ -75,6 +75,30 @@ describe('documentation app', () => {
     expect(response.text).toContain('/openapi/openapi.yaml');
   });
 
+  it('renders AsyncAPI documentation for the default websocket route', async () => {
+    const response = await request(app).get('/websocket').expect(200);
+
+    expect(response.headers['content-type']).toContain('text/html');
+    expect(response.text).toContain('<title>Fixture WebSocket API 1.0.0 documentation</title>');
+    expect(response.text).toContain('AsyncApiStandalone.render');
+    expect(response.text).toContain('user/signed-up');
+  });
+
+  it('renders AsyncAPI documentation for websocket routes without an extension', async () => {
+    const response = await request(app).get('/websocket/module').expect(200);
+
+    expect(response.text).toContain('<title>Module WebSocket API 1.0.0 documentation</title>');
+    expect(response.text).toContain('module/updated');
+  });
+
+  it('serves AsyncAPI specifications as YAML', async () => {
+    const response = await request(app).get('/websocket/asyncapi.yaml').expect(200);
+
+    expect(response.headers['content-type']).toContain('text/yaml');
+    expect(response.text).toContain('asyncapi: 3.0.0');
+    expect(response.text).toContain('title: Fixture WebSocket API');
+  });
+
   it('blocks Markdown path traversal attempts', async () => {
     const response = await request(app).get('/md/%2e%2e/package.json');
 
@@ -83,5 +107,9 @@ describe('documentation app', () => {
 
   it('does not resolve OpenAPI files outside the openapi directory', async () => {
     await expect(findOpenApiFile(docsPath, '../openapi')).resolves.toBeNull();
+  });
+
+  it('does not resolve AsyncAPI files outside the websocket directory', async () => {
+    await expect(findAsyncApiFile(docsPath, '../websocket')).resolves.toBeNull();
   });
 });

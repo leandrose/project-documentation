@@ -5,6 +5,7 @@ import { marked } from 'marked';
 import plantumlEncoder from 'plantuml-encoder';
 import swaggerUiDist from 'swagger-ui-dist';
 import { fileURLToPath } from 'node:url';
+import { buildAsyncApiHtml, buildAsyncApiYaml, findAsyncApiFile } from './asyncapi.js';
 import { buildOpenApiYaml, findOpenApiFile } from './openapi.js';
 import { renderMarkdownPage, renderRedocPage, renderSwaggerPage } from './pages.js';
 
@@ -125,6 +126,21 @@ export function createApp({ docsPath }) {
     response.sendFile(path.join(swaggerUiDist.getAbsoluteFSPath(), 'oauth2-redirect.html'));
   });
 
+  app.get('/websocket', async (_request, response, next) => {
+    try {
+      const filePath = await findAsyncApiFile(resolvedDocsPath, 'asyncapi');
+
+      if (!filePath) {
+        return response.status(404).send('AsyncAPI specification not found');
+      }
+
+      const html = await buildAsyncApiHtml(filePath);
+      return response.type('html').send(html);
+    } catch (error) {
+      return next(error);
+    }
+  });
+
   app.get('/md/*', async (request, response, next) => {
     try {
       const relativePath = request.params[0] || 'index.md';
@@ -178,6 +194,27 @@ export function createApp({ docsPath }) {
       }
 
       const yaml = await buildOpenApiYaml(filePath);
+      return response.type('yaml').send(yaml);
+    } catch (error) {
+      return next(error);
+    }
+  });
+
+  app.get('/websocket/:spec(*)', async (request, response, next) => {
+    try {
+      const requestedSpec = request.params.spec || 'asyncapi';
+      const filePath = await findAsyncApiFile(resolvedDocsPath, requestedSpec);
+
+      if (!filePath) {
+        return response.status(404).send('AsyncAPI specification not found');
+      }
+
+      if (!/\.(yaml|yml|json)$/i.test(requestedSpec)) {
+        const html = await buildAsyncApiHtml(filePath);
+        return response.type('html').send(html);
+      }
+
+      const yaml = await buildAsyncApiYaml(filePath);
       return response.type('yaml').send(yaml);
     } catch (error) {
       return next(error);

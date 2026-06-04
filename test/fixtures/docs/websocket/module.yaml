@@ -1,0 +1,25 @@
+asyncapi: 3.0.0
+info:
+  title: Module WebSocket API
+  version: 1.0.0
+channels:
+  moduleUpdated:
+    address: module/updated
+    messages:
+      moduleUpdated:
+        $ref: '#/components/messages/ModuleUpdated'
+operations:
+  receiveModuleUpdated:
+    action: receive
+    channel:
+      $ref: '#/channels/moduleUpdated'
+    messages:
+      - $ref: '#/channels/moduleUpdated/messages/moduleUpdated'
+components:
+  messages:
+    ModuleUpdated:
+      payload:
+        type: object
+        properties:
+          name:
+            type: string

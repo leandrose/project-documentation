@@ -1,6 +1,6 @@
 {
   "name": "@leandrose/project-documentation",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Dynamic project documentation server for rendering Markdown content and serving OpenAPI/Swagger specifications with integrated HTML documentation pages.",
   "keywords": [
     "project",
@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^12.0.0",
+    "@asyncapi/generator": "^2.8.0",
+    "@asyncapi/html-template": "^3.5.6",
     "express": "^4.21.2",
     "marked": "^15.0.7",
     "plantuml-encoder": "^1.4.0",
